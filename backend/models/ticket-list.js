@@ -1,6 +1,6 @@
-import Ticket from "./ticket";
+import Ticket from "./ticket.js";
 
-class TicketList  {
+export default class TicketList  {
   constructor() {
     this.ultimoNumero = 0;
     this.pendientes = [];

@@ -4,23 +4,41 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 const GetIntoForm = () => {
   const navigate = useNavigate();
-  const [form, seForm] = useState({});
+  const [form, setForm] = useState({
+    name: "",
+    desktop: ""
+  });
+
+  const handleInputsChange = (e) => {
+    let name = e.currentTarget.name;
+    let value = e.currentTarget.value;
+    setForm({ ...form, [name]: value });
+  };
 
   const handlerSubmit = (e) => {
     e.preventDefault();
 
-    navigate("/desk");
+    if(!form.desktop.trim() && !form.desktop.trim()){
+      console.log("sin data")
+      return
+    }
+
+    localStorage.setItem("agente", form.name);
+    localStorage.setItem("desktop", form.desktop);
+    
+    navigate("/desk")
   };
 
   return (
     <form className="flex justify-center" onSubmit={(e) => handlerSubmit(e)}>
-      <div className="bg-slate-400 w-1/2">
+      <div className="bg-slate-400 p-3 rounded-md">
         <div>
           <label htmlFor="name">
             Nombre
             <span className="text-red-700">*</span>
           </label>
           <input
+            onChange={handleInputsChange}
             type="text"
             name="name"
             key="name"
@@ -33,6 +51,7 @@ const GetIntoForm = () => {
           <label htmlFor="desktop">
             desktop <span className="text-red-700">*</span>
             <input
+              onChange={handleInputsChange}
               type="desktop"
               name="desktop"
               key="desktop"

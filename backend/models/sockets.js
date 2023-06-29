@@ -1,20 +1,29 @@
+import TicketList from "./ticket-list.js";
+
 export default class Sockets {
   constructor(io) {
     this.io = io;
+
+    // crear instacia tiket list 
+    this.ticketList = new TicketList()
     this.socketEvents();
   }
 
   socketEvents() {
     this.io.on("connection", (socket) => {
       console.log("cliente conectado");
-      socket.on("mensaje-al-servidor", (data) => {
-        // Al usar socket.emit(...) se envia solo al servidor con el que
-        // se interactua
-        // socket.emit(...)
 
-        // Al usar "IO" , se envia a todos los clientes conectados
-        this.io.emit("mensaje-from-server", data);
-      });
+      socket.on("client:request-ticket", (_data, callback) => {
+        // nuevo ticket
+        const newTicket = this.ticketList.crearTicket()
+        callback(newTicket);
+      })
+
+      socket.on("client:next-ticket-to-attend", ({agente, desktop}, callback) => {
+        const yourTicket = this.ticketList.asignarTicket(agente, desktop);
+        callback(yourTicket)
+      })
+
     });
   }
 }

@@ -1,8 +1,17 @@
-import React from "react";
+import { useContext,useState } from "react";
 import useHideMenu from "../hooks/useHideMenu";
+import { SocketContext } from "../context/SocketContext";
 
 const CreateTicket = () => {
   useHideMenu(true);
+  const [ticket, setTicket] = useState(null)
+  const {socket} = useContext(SocketContext)
+
+  const createNewTicket = () => {
+    socket.emit("client:request-ticket", null, (ticket) => {
+      setTicket(ticket.numero);
+    })
+  }
 
   return (
     <>
@@ -10,14 +19,14 @@ const CreateTicket = () => {
         touch the button for a new ticket
       </div>
 
-      <button className="text-white bg-pink-400 px-3 py-1 rounded-lg">
-        new ticket
+      <button onClick={createNewTicket} className="text-white bg-pink-400 px-3 py-1 rounded-lg">
+        give new ticket
       </button>
 
-      <div>
-        <p>su numero</p>
-        <p className="text-6xl font-bold">78</p>
-      </div>
+      {ticket && <div>
+        <p>your ticket number</p>
+        <p className="text-6xl font-bold">{ticket}</p>
+      </div>}
     </>
   );
 };
