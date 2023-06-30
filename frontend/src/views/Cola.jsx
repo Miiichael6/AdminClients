@@ -19,9 +19,6 @@ const Cola = () => {
        .then(tickets => {
          setTickets(tickets.lastThirdteen);
        })
-      
-
-      // setTickets(data.lastThirdteen)
     }
 
     getLastTickets();
