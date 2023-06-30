@@ -2,7 +2,6 @@ import express from "express";
 import http from "http";
 import { Server as SocketServer } from "socket.io";
 import cors from "cors"
-
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Sockets from "./sockets.js";
@@ -17,15 +16,19 @@ export default class Server {
     this.server = http.createServer(this.app);
 
     this.io = new SocketServer(this.server, {});
+
+    this.sockets = new Sockets(this.io);
   }
 
   middlewares() {
-    this.app.use(cors())
     this.app.use(express.static(path.join(__dirname, '../public')));
-  }
-
-  configSockets() {
-    new Sockets(this.io);
+    this.app.use(cors())
+    
+    this.app.get("/ultimos", (_req, res) => {
+      res.send({
+        lastThirdteen: this.sockets.ticketList.ultimos13,
+      })
+    })
   }
 
   execute() {
@@ -33,7 +36,7 @@ export default class Server {
     this.middlewares()
 
     // init sockets
-    this.configSockets();
+    // this.configSockets();
 
     // init server
     this.server.listen(this.port);

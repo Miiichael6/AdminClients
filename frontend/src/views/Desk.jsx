@@ -20,8 +20,6 @@ const Desk = () => {
 
   const nextTicketToAttend = () => {
     socket.emit("client:next-ticket-to-attend", usuario, (ticket) => {
-      console.log("hi")
-      console.log(ticket);
       setTicket(ticket);
     });
   };
